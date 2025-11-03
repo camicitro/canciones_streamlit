@@ -259,7 +259,14 @@ st.subheader("Canciones similares")
 
 columnas_mostrar = ["title", "artist_name", "genre_rosamerica"]
 
-df_similares_filtrado = df[columnas_mostrar].sample(5).rename(columns={
+similares = df[
+    (df["cluster"] == selected_song["cluster"]) &
+    (df["display_name"] != selected_song["display_name"])
+]
+
+similares = similares.sample(5)
+
+df_similares_filtrado = similares[columnas_mostrar].rename(columns={
     "title": "Título",
     "artist_name": "Artista",
     "genre_rosamerica": "Género"
