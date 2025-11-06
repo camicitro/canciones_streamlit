@@ -9,6 +9,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 import streamlit.components.v1 as components
 from sklearn.neighbors import NearestNeighbors
+import numpy as np
+from sklearn.ensemble import IsolationForest
+from sklearn.preprocessing import MinMaxScaler
+
+alt.data_transformers.enable("vegafusion")
+alt.renderers.enable("mimetype")
 
 # ========================
 # CONFIGURACIÓN GENERAL
@@ -68,7 +74,7 @@ st.markdown(
 # SIDEBAR DE NAVEGACIÓN
 # ========================
 st.sidebar.title("🎧 Menú")
-page = st.sidebar.radio("", ["Explorador de canciones", "Referencias"])
+page = st.sidebar.radio("", ["Introducción al proyecto","Explorador de canciones", "Exploración libre","Referencias"])
 
 # ========================
 # OPCIÓN 1: EXPLORADOR
@@ -177,7 +183,7 @@ if page == "Explorador de canciones":
     df["pca_2_2d"] = pca_2d[:,1]
 
     color_legend = alt.Legend(
-        title="Tipo de canción",
+        title="Tipo de cluster",
         labelExpr="datum.value == 0 ? 'Cluster 0 (Movido)' : 'Cluster 1 (Tranquilo)'"
     )
     cluster_color_scale = alt.Scale(domain=[0, 1], range=['#E66E6E', '#6496E8'])
@@ -207,6 +213,7 @@ if page == "Explorador de canciones":
         "feature": features,
         "value": [selected_song[f] for f in features]
     })
+    
     chart_features = (
         alt.Chart(song_features)
         .mark_bar(size=25, color="#f5b342")
@@ -566,3 +573,419 @@ elif page == "Referencias":
     """
 
     components.html(html_referencias, height=3700, scrolling=False)
+
+
+elif page == "Introducción al proyecto":
+    st.title("Proyecto Integrador de Ciencia de Datos - Grupo 8")
+    st.subheader("poner un titulo tipo el nombre del proyecto")
+    st.text("Lucía Bürky, Camila Citro")
+    st.markdown("---")
+
+    html_intro = """
+    <style>
+        .container-intro {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 40px 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        .section {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            border-bottom: 3px solid #333333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .intro-text {
+            font-size: 1.05em;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+    </style>
+
+    <div class="container-intro">
+        <div class="section">
+            <h2>📌 Descripción general</h2>
+            <p class="intro-text">
+            Este proyecto forma parte del <strong>Proyecto Integrador de Ciencia de Datos</strong> y tiene como objetivo 
+            construir un sistema de análisis musical que permita explorar, clasificar y recomendar canciones 
+            según sus características sonoras.
+            </p>
+            <p class="intro-text">
+            Utilizamos la base de datos de <strong>AcousticBrainz</strong>, que ofrece información técnica sobre millones de canciones. 
+            Sin embargo, es importante aclarar que a pesar de tener muchísimas canciones, AcousticBrainz está limitado ya que actualmente no está en uso. Es decir, se han cargado canciones en dicha plataforma hasta el año 2022, es por ello que aquí no se encontrarán canciones actuales.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Proceso de desarrollo</h2>
+            <p class="intro-text">
+            El desarrollo se dividió en distintas etapas:
+            </p>
+            <ol class="intro-text">
+                <li><strong>Extracción y procesamiento de datos:</strong> Airflow automatizó la obtención de canciones desde APIs externas. Se utilizaron dos APIs: AcousticBrainz y Last.fm</li>
+                <li><strong>Análisis exploratorio:</strong> Realizamos un <em>EDA</em> en Google Colab formulando hipótesis sobre la relación entre las características de las cancioens y sus géneros musicales.</li>
+                <li><strong>Aprendizaje supervisado:</strong> Entrenamos distintos modelos para predecir el género de una canción, siendo el <em>Random Forest</em> el de mejor desempeño, aunque con limitaciones debido a la cantidad de géneros disponibles.</li>
+                <li><strong>Aprendizaje no supervisado:</strong> Aplicamos <em>PCA</em> para reducir dimensiones y descubrimos que lo mejor era utilizar dos componentes, y que las mismas representaban la <em>tranquilidad</em> y la <em>positividad emocional</em> de las canciones. A partir de ellas, se identificaron dos <em>clusters</em>, que según las características que observamos, decidimos clasificarlos como: canciones “Movidas” (cluster 0) y canciones “Tranquilas” (cluster 1).</li>
+                <li><strong>Detección de anomalías:</strong> Usamos el algoritmo <em>Isolation Forest</em> para encontrar alrededor de 300 canciones con combinaciones inusuales de características.</li>
+                <li><strong>Visualización interactiva:</strong> Finalmente, desarrollamos esta aplicación en <em>Streamlit</em> para permitir al usuario explorar canciones, conocer sus características y descubrir temas similares.</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Resultados y aportes</h2>
+            <p class="intro-text">
+            El sistema permite explorar el espacio musical de forma visual e interactiva. 
+            Los usuarios pueden seleccionar una canción, analizar sus atributos musicales, su pertenencia a un cluster 
+            y recibir recomendaciones de temas similares.
+            </p>
+            <p class="intro-text">
+            Además, los análisis realizados muestran una coherencia entre las agrupaciones y los géneros musicales, 
+            validando la división entre canciones movidas y tranquilas. 
+            Este proyecto sienta las bases para futuras aplicaciones de recomendación musical basadas en contenido.
+            </p>
+        </div>
+    </div>
+    """
+    components.html(html_intro, height=1500, scrolling=True)
+
+elif page == "Exploración libre":
+
+    st.title("📈 Análisis y exploración libre de canciones")
+    st.markdown("Explorá los distintos gráficos interactivos creados durante el análisis de datos.")
+    st.markdown("---")
+
+    df = pd.read_csv("songs_final_8_COMPLETO.csv")
+    df["display_name"] = df["title"] + " - " + df["artist_name"]
+    df_clean = df.dropna(subset=['track_mbid', 'cluster'])
+
+    features = ["sad","happy","party","relaxed","acoustic","danceable","tonal","bright","instrumental"]
+
+    
+
+    # Gráfico 1: Clusters y características
+    st.subheader("Visualización 1: Clusters y características")
+
+    # Opciones para controles
+    genres = ["Todos"] + sorted(df_clean["genre_rosamerica"].dropna().unique().tolist())
+    genre_selected = st.selectbox("Filtrar por género:", genres, index=0)
+
+    # Filtrado dinámico
+    if genre_selected != "Todos":
+        df_filtered = df_clean[df_clean["genre_rosamerica"] == genre_selected]
+    else:
+        df_filtered = df_clean
+
+    # Selectbox para elegir canción
+    song_names = sorted(df_filtered["display_name"].unique().tolist())
+    song_selected = st.selectbox("Elegí una canción:", song_names)
+
+    selected_song = df_filtered[df_filtered["display_name"] == song_selected].iloc[0]
+
+    # Colores
+    cluster_color_scale = alt.Scale(domain=[0, 1], range=['#E66E6E', '#6496E8'])
+    color_legend = alt.Legend(title="Tipo de canción", labelExpr="datum.value == 0 ? 'Movido' : 'Tranquilo'")
+
+    # Scatter PCA
+    scatter = (
+        alt.Chart(df_filtered)
+        .mark_circle(size=40)
+        .encode(
+            x=alt.X("pca_1_2d", title="Componente principal 1 (tranquilidad)"),
+            y=alt.Y("pca_2_2d", title="Componente principal 2 (positividad emocional)"),
+            color=alt.Color("cluster:N", legend=color_legend, scale=cluster_color_scale),
+            tooltip=["title", "artist_name", "genre_rosamerica", "cluster"]
+        )
+        .properties(width=600, height=500, title=alt.TitleParams(
+            text="División de clusters (con PCA)",
+            anchor="middle",          
+            fontSize=18,
+            fontWeight=500
+        ))
+        .interactive()
+    )
+
+    # Canción seleccionada destacada
+    highlight = (
+        alt.Chart(pd.DataFrame([selected_song]))
+        .mark_circle(size=200, color="#f5b342", stroke="black", strokeWidth=2)
+        .encode(x="pca_1_2d", y="pca_2_2d", tooltip=["title", "artist_name", "genre_rosamerica"])
+    )
+
+    # Gráfico combinado
+    chart_pca = scatter + highlight
+
+    # Características de la canción seleccionada
+    song_features = pd.DataFrame({
+        "feature": features,
+        "value": [selected_song[f] for f in features]
+    })
+
+    #colores
+    cluster_color_scale_bar = alt.Scale(domain=[0, 1], range=['#E66E6E', '#6496E8'])
+    cluster_value_bar = int(selected_song["cluster"])
+    cluster_color_bar = "#E66E6E" if cluster_value_bar == 0 else "#6496E8"
+
+    chart_features = (
+        alt.Chart(song_features)
+        .mark_bar(size=25, color=cluster_color_bar)
+        .encode(
+            x=alt.X("value:Q", title="Valor", scale=alt.Scale(domain=[0, 1])),
+            y=alt.Y("feature:N", sort="-x", title=""),
+            tooltip=["feature", "value"]
+        )
+        .properties(width=375, height=375, title=alt.TitleParams(
+            text="Características de la canción",
+            anchor="middle",
+            fontSize=18,
+            fontWeight=500
+        ))
+    )
+
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.altair_chart(chart_pca, use_container_width=True)
+    with col2:
+        st.altair_chart(chart_features, use_container_width=True)
+    
+    
+
+
+    st.markdown("---")
+    st.subheader("Visualización 2: Géneros y características por cluster")
+    
+    genre_cluster_counts = (
+        df_clean.groupby(['genre_rosamerica', 'cluster'])
+        .size()
+        .reset_index(name='count')
+    )
+
+    chart_genre_cluster = (
+        alt.Chart(genre_cluster_counts)
+        .mark_bar()
+        .encode(
+            x=alt.X('genre_rosamerica:N', title='Género', sort='-y',
+                    axis=alt.Axis(labelAngle=-40)),
+            y=alt.Y('count:Q', title='Cantidad de canciones'),
+            color=alt.Color('cluster:N', title='Cluster', scale=cluster_color_scale,
+                            legend=alt.Legend(
+                                title="Tipo de canción",
+                                labelExpr="datum.value == 0 ? 'Movido' : 'Tranquilo'"
+                            )),
+            xOffset='cluster:N',
+            tooltip=[
+                alt.Tooltip('genre_rosamerica:N', title='Género'),
+                alt.Tooltip('cluster:N', title='Cluster'),
+                alt.Tooltip('count:Q', title='Cantidad')
+            ]
+        )
+        .properties(
+            title=alt.TitleParams(
+                text='Distribución de géneros en cada cluster',
+                anchor='middle',
+                fontSize=18,
+                fontWeight=500
+            ),
+            width=450,
+            height=400
+        )
+    )
+
+    feature_means = (
+        df_clean.groupby("cluster")[features].mean().reset_index().melt(id_vars="cluster")
+    )
+
+    chart_bar_features = (
+        alt.Chart(feature_means)
+        .mark_bar()
+        .encode(
+            y=alt.Y("variable:N", title="Característica musical", sort='-x'),
+            x=alt.X("value:Q", title="Valor promedio"),
+            color=alt.Color("cluster:N", title="Cluster", scale=cluster_color_scale,
+                            legend=alt.Legend(
+                                labelExpr="datum.value == 0 ? 'Movido' : 'Tranquilo'"
+                            )),
+            xOffset="cluster:N",
+            tooltip=["variable:N", "cluster:N", "value:Q"]
+        )
+        .properties(
+            title=alt.TitleParams(
+                text="Comparación de características musicales por cluster",
+                anchor='middle',
+                fontSize=18,
+                fontWeight=500
+            ),
+            width=450,
+            height=400
+        )
+    )
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.altair_chart(chart_genre_cluster, use_container_width=True)
+    with col2:
+        st.altair_chart(chart_bar_features, use_container_width=True)
+
+    
+    
+    st.markdown("---")
+    st.subheader("Visualización 3: Canciones anómalas")
+    st.markdown("Explorá las canciones más inusuales según sus características musicales detectadas con *Isolation Forest*.")
+
+    # ===============================
+    # 1️⃣ Detección de anomalías
+    # ===============================
+    X = df_clean[features]
+    iso_forest = IsolationForest(contamination=0.02, random_state=42)
+    predictions = iso_forest.fit_predict(X)
+    df_clean['anomaly'] = predictions
+
+    raw_anomaly_scores = iso_forest.score_samples(X)
+    inverted_scores = -raw_anomaly_scores.reshape(-1, 1)
+    scaler = MinMaxScaler()
+    normalized_scores = scaler.fit_transform(inverted_scores)
+    df_clean['porcentaje_anomalia'] = normalized_scores
+
+    # ===============================
+    # 2️⃣ Filtro por género
+    # ===============================
+    genres = ["Todos"] + sorted(df_clean["genre_rosamerica"].dropna().unique().tolist())
+    genre_selected = st.selectbox("🎵 Filtrar por género:", genres, index=0)
+
+    if genre_selected == "Todos":
+        df_filtered = df_clean.copy()
+    else:
+        df_filtered = df_clean[df_clean["genre_rosamerica"] == genre_selected]
+
+    # ===============================
+    # 3️⃣ Selección de canción anómala
+    # ===============================
+    df_anomalas = (
+        df_filtered[df_filtered["anomaly"] == -1]
+        .sort_values(by="porcentaje_anomalia", ascending=False)
+        .head(200)
+    )
+
+    options_anomalas = df_anomalas["title"] + " - " + df_anomalas["artist_name"]
+    selected_song = st.selectbox("🎧 Elegí una canción anómala:", options_anomalas)
+
+    selected_row = df_anomalas[df_anomalas["title"] + " - " + df_anomalas["artist_name"] == selected_song].iloc[0]
+
+    # ===============================
+    # 4️⃣ Preparación de gráficos
+    # ===============================
+    cluster_color_scale = alt.Scale(domain=[0, 1], range=["#E66E6E", "#6496E8"])
+
+    color_scale = alt.Scale(domain=[df_anomalas["porcentaje_anomalia"].min(), df_anomalas["porcentaje_anomalia"].max()],
+                            range=["#FFD166", "#006400"])
+    size_scale = alt.Scale(domain=[df_anomalas["porcentaje_anomalia"].min(), df_anomalas["porcentaje_anomalia"].max()],
+                        range=[100, 600])
+
+    # --- Canciones normales ---
+    normales = (
+        alt.Chart(df_filtered[df_filtered["anomaly"] == 1])
+        .mark_circle(size=25)
+        .encode(
+            x=alt.X("pca_1_2d", title="Componente Principal 1 (Tranquilidad)"),
+            y=alt.Y("pca_2_2d", title="Componente Principal 2 (Positividad emocional)"),
+            color=alt.value("#D3D3D3"),
+            opacity=alt.value(0.3),
+        )
+    )
+
+    # --- Canciones anómalas ---
+    anomalas = (
+        alt.Chart(df_anomalas)
+        .mark_circle()
+        .encode(
+            x="pca_1_2d",
+            y="pca_2_2d",
+            fill=alt.Fill("porcentaje_anomalia:Q", scale=color_scale, legend=None),
+            size=alt.Size(
+                "porcentaje_anomalia:Q",
+                scale=size_scale,
+                legend=alt.Legend(title="Nivel de Anomalía", format=".0%", titleFontSize=13, labelFontSize=11),
+            ),
+            tooltip=["title", "artist_name", "genre_rosamerica", alt.Tooltip("porcentaje_anomalia:Q", format=".2%")],
+        )
+    )
+
+    # --- Canción seleccionada destacada ---
+    highlight = (
+        alt.Chart(df_filtered[df_filtered["track_mbid"] == selected_row["track_mbid"]])
+        .mark_circle(size=300, color="#f5b342", stroke="black", strokeWidth=2)
+        .encode(x="pca_1_2d", y="pca_2_2d", tooltip=["title", "artist_name"])
+    )
+
+    # --- Texto con nombre ---
+    text_label = (
+        alt.Chart(pd.DataFrame([selected_row]))
+        .mark_text(
+            align="center",
+            baseline="bottom",
+            dy=-15,
+            fontSize=13,
+            fontWeight="bold",
+            color="black",
+        )
+        .encode(x="pca_1_2d", y="pca_2_2d", text="title:N")
+    )
+
+    # --- Gráfico combinado ---
+    scatter_anomalies = (
+        alt.layer(normales, anomalas, highlight, text_label)
+        .properties(
+            title=alt.TitleParams(
+                text="Visualización de Anomalías sobre PCA (Top 200 canciones más anómalas)",
+                anchor="middle",
+                fontSize=18,
+                fontWeight="bold",
+            ),
+            width=650,
+            height=450,
+        )
+        .interactive()
+    )
+
+    # --- Gráfico de características ---
+    song_features = pd.DataFrame({
+        "feature": features,
+        "value": [selected_row[f] for f in features]
+    })
+    cluster_color_bar = "#E66E6E" if selected_row["cluster"] == 0 else "#6496E8"
+
+    chart_features = (
+        alt.Chart(song_features)
+        .mark_bar(size=25, color=cluster_color_bar)
+        .encode(
+            x=alt.X("value:Q", title="Valor", scale=alt.Scale(domain=[0, 1])),
+            y=alt.Y("feature:N", sort="-x", title=""),
+            tooltip=["feature", "value"],
+        )
+        .properties(width=300, height=400, title="Características de la canción seleccionada")
+    )
+
+    # ===============================
+    # 5️⃣ Mostrar en Streamlit
+    # ===============================
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.altair_chart(scatter_anomalies, use_container_width=True)
+    with col2:
+        st.altair_chart(chart_features, use_container_width=True)
+        
+
+
+
+    st.markdown("---")
+    st.subheader("Visualización 4: ???")
+    # (pegá el tercer gráfico, chart_bar_features)
