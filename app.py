@@ -80,7 +80,7 @@ page = st.sidebar.radio("", ["Introducción al proyecto","Explorador de cancione
 if page == "Explorador de canciones":
     st.title("🎵 Explorador de Canciones")
 
-    df = pd.read_csv("songs_final_8_COMPLETO.csv")
+    df = pd.read_csv("songs_final_cortito_para_pruebas.csv")
 
     if 'display_name' not in df.columns:
         df['display_name'] = df['title'] + " - " + df['artist_name']
@@ -179,7 +179,7 @@ if page == "Explorador de canciones":
                 tooltip=["Característica", "Valor promedio"]
             )
             .properties(width=600, height=400,
-                        title=f"Promedio de características de canción - {selected_song['genre_rosamerica']}")
+                        title=f"Promedio de características de género - {selected_song['genre_rosamerica']}")
         )
 
         st.altair_chart(chart_genre_avg, use_container_width=True)
@@ -553,8 +553,8 @@ elif page == "Referencias":
 
 
 elif page == "Introducción al proyecto":
-    st.title("Proyecto Integrador de Ciencia de Datos - Grupo 8")
-    st.subheader("poner un titulo tipo el nombre del proyecto")
+    st.title("MusicApp")
+    st.subheader("Proyecto Integrador de Ciencia de Datos - Grupo 8")
     st.text("Lucía Bürky, Camila Citro")
     st.markdown("---")
 
@@ -641,7 +641,7 @@ elif page == "Exploración libre":
     st.markdown("Explorá los distintos gráficos interactivos creados durante el análisis de datos.")
     st.markdown("---")
 
-    df = pd.read_csv("songs_final_8_COMPLETO.csv")
+    df = pd.read_csv("songs_final_cortito_para_pruebas.csv")
     df["display_name"] = df["title"] + " - " + df["artist_name"]
     df_clean = df.dropna(subset=['track_mbid', 'cluster'])
 
@@ -699,7 +699,7 @@ elif page == "Exploración libre":
     )
 
     # Gráfico combinado
-    chart_pca = scatter + highlight
+    chart_pca = scatter + highlight 
 
     # Características de la canción seleccionada
     song_features = pd.DataFrame({
@@ -731,6 +731,15 @@ elif page == "Exploración libre":
     col1, col2 = st.columns([2, 1])
     with col1:
         st.altair_chart(chart_pca, use_container_width=True)
+        st.markdown(
+            """
+            <div style="text-align:center; font-size:14px; color:gray; margin-top:-15px;">
+                <strong>Eje X:</strong> hacia la derecha → mayor <em>tranquilidad</em> |
+                <strong>Eje Y:</strong> hacia arriba → mayor <em>positividad emocional</em>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
     with col2:
         st.altair_chart(chart_features, use_container_width=True)
     
@@ -957,6 +966,15 @@ elif page == "Exploración libre":
     col1, col2 = st.columns([2, 1])
     with col1:
         st.altair_chart(scatter_anomalies, use_container_width=True)
+        st.markdown(
+            """
+            <div style="text-align:center; font-size:14px; color:gray; margin-top:-15px;">
+                <strong>Eje X:</strong> hacia la derecha → mayor <em>tranquilidad</em> |
+                <strong>Eje Y:</strong> hacia arriba → mayor <em>positividad emocional</em>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
     with col2:
         st.altair_chart(chart_features, use_container_width=True)
         
@@ -964,4 +982,80 @@ elif page == "Exploración libre":
 
 
     st.markdown("---")
-    st.subheader("Visualización 4: ???")
+    st.subheader("Visualización 4: Distribución PCA por género")
+
+    genre_colors = {
+        "Pop": "#F9C74F",
+        "Rock": "#F17634",
+        "Rhythmic": "#60DF00",
+        "Dance": "#18D8F1",
+        "Classic": "#056A96",
+        "Jazz": "#F88DBF",
+        "Hip-Hop": "#E63535"
+    }
+        
+    chart_pca_genre = (
+        alt.Chart(df_clean)
+        .mark_circle(size=40)
+        .encode(
+            x=alt.X("pca_1_2d", title="Componente principal 1 (Tranquilidad)"),
+            y=alt.Y("pca_2_2d", title="Componente principal 2 (Positividad emocional)"),
+            #color=alt.Color("genre_rosamerica:N", legend=alt.Legend(title="Género")),
+            color=alt.Color(
+                "genre_rosamerica:N",
+                legend=alt.Legend(title="Género"),
+                scale=alt.Scale(domain=list(genre_colors.keys()), range=list(genre_colors.values()))
+            ),
+            tooltip=["title", "artist_name", "genre_rosamerica"]
+        )
+        .properties(width=700, height=500, title="Proyección PCA separada por género")
+        .interactive()
+    )
+
+    st.altair_chart(chart_pca_genre, use_container_width=True)
+    st.markdown(
+            """
+            <div style="text-align:center; font-size:14px; color:gray; margin-top:-15px;">
+                <strong>Eje X:</strong> hacia la derecha → mayor <em>tranquilidad</em> |
+                <strong>Eje Y:</strong> hacia arriba → mayor <em>positividad emocional</em>
+            </div>
+            """,
+            unsafe_allow_html=True
+    )
+
+    st.markdown("---")
+    st.subheader("Visualización 5: Gráfico de radar de características por cluster")
+
+    import plotly.graph_objects as go
+    features = ["party", "danceable", "happy", "relaxed","acoustic", "sad", "tonal", "instrumental", "bright" ]
+
+    cluster_means = df_clean.groupby("cluster")[features].mean().reset_index()
+
+    fig = go.Figure()
+
+    colors = {0: "#E66E6E", 1: "#6496E8"} 
+
+    for i, row in cluster_means.iterrows():
+        color = colors[int(row["cluster"])]
+        fig.add_trace(go.Scatterpolar(
+            r=row[features].values,
+            theta=features,
+            fill='toself',
+            name=f"{'Movido' if row['cluster']==0 else 'Tranquilo'}",
+            line=dict(color=color, width=2),
+        ))
+
+    fig.update_layout(
+        title=dict(
+            text="Comparación de características musicales por cluster",
+            x=0.5, 
+            xanchor="center",
+            font=dict(size=18, family="Arial", color="#333", weight=400)
+        ),
+        polar=dict(radialaxis=dict(visible=True, range=[0,1])),
+        showlegend=True,
+        height=500,
+        width=600
+    )
+    st.plotly_chart(fig, use_container_width=True)
+    
