@@ -526,15 +526,15 @@ elif page == "Referencias":
 <div class="container-analisis">
     <div class="section">
         <h2 id="cluster-title">Análisis de los clusters</h2>
-        <p class="intro-text">El modelo de agrupamiento permitió identificar dos grandes grupos de canciones según sus características musicales:</p>
+        <p class="intro-text">La técnica de Clustering permitió identificar dos grandes grupos de canciones según sus características:</p>
         <div class="clusters-grid">
             <div class="cluster-card cluster-0">
                 <h3><span class="cluster-icon">💃</span> Cluster 0 (Movido)</h3>
-                <p>Agrupa canciones con valores más altos en "party" y "danceable", asociadas a un ritmo activo, enérgico y festivo. Suelen incluir géneros como Pop, Rock y Dance, y transmiten una sensación dinámica y alegre, ideales para ambientes sociales o de celebración.</p>
+                <p>Agrupa canciones con valores más altos en "party" y "danceable", asociadas a un ritmo activo, enérgico y festivo. En su mayoría, incluye géneros como Pop, Rock y Dance, y transmiten una sensación dinámica y alegre.</p>
             </div>
             <div class="cluster-card cluster-1">
                 <h3><span class="cluster-icon">😴</span> Cluster 1 (Tranquilo)</h3>
-                <p>Reúne canciones con valores más altos en "relaxed", "acoustic", "bright" y "tonal", reflejando una atmósfera serena, melódica y armónica. Predominan géneros como Rock clásico, Jazz y música clásica, destacándose por su mayor riqueza tonal y menor intensidad rítmica.</p>
+                <p>Reúne canciones con valores más altos en "relaxed", "acoustic", "bright" y "tonal", reflejando una atmósfera serena, melódica y armónica. Predominan géneros como Rock, Jazz y Classic.</p>
             </div>
         </div>
         <p class="intro-text" style="margin-top: 25px;">En conjunto, los dos clusters representan dos modos de experiencia musical predominantes: uno energético y estimulante, y otro tranquilo y contemplativo.</p>
@@ -542,22 +542,22 @@ elif page == "Referencias":
 
     <div class="section">
         <h2 id="pca-title">Componentes principales del PCA</h2>
-        <p class="intro-text">El análisis de componentes principales permitió reducir las características musicales a dos dimensiones fundamentales, que resumen la mayor parte de la variabilidad entre canciones:</p>
+        <p class="intro-text">El análisis de componentes principales permitió reducir las características musicales a las siguientes dos dimensiones:</p>
         <div class="pca-components">
             <div class="pca-card pca-1">
-                <h3><span class="pca-icon">🧘‍♀️</span> Componente 1 – Tranquilidad</h3>
-                <p>Presenta cargas positivas en "sad", "relaxed" y "acoustic", y negativas en "party" y "danceable". Esto significa que valores altos corresponden a canciones relajadas, melancólicas y acústicas, mientras que valores bajos indican temas festivos y bailables. Representa el nivel de energía o calma emocional de la canción.</p>
+                <h3><span class="pca-icon">🧘‍♀️</span> Componente 1: Tranquilidad</h3>
+                <p>Presenta cargas positivas en "sad", "relaxed" y "acoustic", y negativas en "party" y "danceable". Esto significa que valores altos corresponden a canciones relajadas, mientras que valores bajos indican canciones bailables.</p>
             </div>
             <div class="pca-card pca-2">
-                <h3><span class="pca-icon">🌞</span> Componente 2 – Positividad emocional</h3>
-                <p>Muestra cargas positivas en "happy", "tonal" y "bright", y negativas en "instrumental" y "relaxed". Las canciones con valores altos tienden a ser más alegres, luminosas y expresivas, mientras que las de valores bajos son más instrumentales, introspectivas o sobrias. Representa el grado de expresividad o brillo emocional.</p>
+                <h3><span class="pca-icon">🌞</span> Componente 2: Positividad emocional</h3>
+                <p>Muestra cargas positivas en "happy", "tonal" y "bright", y negativas en "instrumental" y "relaxed". Las canciones con valores altos tienden a ser más alegres, mientras que las de valores bajos son más instrumentales.</p>
             </div>
         </div>
-        <p class="intro-text" style="margin-top: 25px;">Estas dos dimensiones —Tranquilidad y Positividad emocional— conforman un mapa sonoro que permite visualizar el espacio musical de cada canción y entender su posición dentro de los clusters.</p>
+        <p class="intro-text" style="margin-top: 25px;">Estas dos dimensiones conforman un mapa que permite visualizar la posición de cada canción dentro de los clusters.</p>
     </div>
 
     <div class="section">
-        <h2 id="table-title">Descripción de las características musicales</h2>
+        <h2 id="table-title">Descripción de características</h2>
         <table class="characteristics-table">
             <thead>
                 <tr>
@@ -567,114 +567,100 @@ elif page == "Referencias":
             </thead>
             <tbody>
                 <tr>
-                    <td class="characteristic-name">Relaxed</td>
+                    <td class="characteristic-name">relaxed</td>
                     <td>Indica el nivel de serenidad o calma de una canción. Valores altos corresponden a temas lentos o suaves.</td>
                 </tr>
                 <tr>
-                    <td class="characteristic-name">Bright</td>
+                    <td class="characteristic-name">bright</td>
                     <td>Representa la luminosidad o "brillo" del sonido, asociado a tonos agudos y alegres.</td>
                 </tr>
                 <tr>
-                    <td class="characteristic-name">Sad</td>
+                    <td class="characteristic-name">sad</td>
                     <td>Evalúa el nivel de melancolía o tristeza percibida en la canción.</td>
                 </tr>
                 <tr>
-                    <td class="characteristic-name">Acoustic</td>
+                    <td class="characteristic-name">acoustic</td>
                     <td>Mide cuánto predomina el uso de instrumentos acústicos frente a electrónicos.</td>
                 </tr>
                 <tr>
-                    <td class="characteristic-name">Happy</td>
+                    <td class="characteristic-name">happy</td>
                     <td>Describe el grado de positividad emocional o alegría transmitida.</td>
                 </tr>
                 <tr>
-                    <td class="characteristic-name">Party</td>
+                    <td class="characteristic-name">party</td>
                     <td>Refleja el carácter festivo o de celebración del tema.</td>
                 </tr>
                 <tr>
-                    <td class="characteristic-name">Instrumental</td>
+                    <td class="characteristic-name">instrumental</td>
                     <td>Indica si la canción es principalmente instrumental (sin voz).</td>
                 </tr>
                 <tr>
-                    <td class="characteristic-name">Danceable</td>
+                    <td class="characteristic-name">danceable</td>
                     <td>Evalúa cuán fácil resulta bailar la canción, en función del ritmo y la percusión.</td>
                 </tr>
                 <tr>
-                    <td class="characteristic-name">Tonal</td>
+                    <td class="characteristic-name">tonal</td>
                     <td>Mide la estabilidad armónica o claridad tonal del tema (opuesto a lo atonal o experimental).</td>
                 </tr>
             </tbody>
         </table>
     </div>
     <div class="section">
-        <h2 id="genre-title">Información sobre Géneros Musicales</h2>
-        <p class="intro-text">Los géneros han sido obtenidos de la base de datos de AcousticBrainz y clasificados bajo
-            la taxonomía de Rosamerica. Esta tabla describe las características generales de los géneros predominantes
-            en el dataset:</p>
+        <h2 id="genre-title">Descripción sobre géneros</h2>
         <table class="characteristics-table">
             <thead>
                 <tr>
                     <th>Género</th>
-                    <th>Descripción Representativa</th>
+                    <th>Descripción</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="characteristic-name">Pop</td>
-                    <td>Música popular con estructuras simples, melódica y enfocada en el mainstream. Frecuentemente
-                        asociada al Cluster Movido.</td>
+                    <td>Música popular con estructuras simples y melódicas.</td>
                 </tr>
                 <tr>
                     <td class="characteristic-name">Rock</td>
-                    <td>Amplia gama de estilos centrados en la guitarra eléctrica, batería y bajo. Puede variar entre
-                        Movido (enérgico) y Tranquilo (baladas o clásico).</td>
+                    <td>Amplia gama de estilos centrados en la guitarra eléctrica, batería y bajo.</td>
                 </tr>
                 <tr>
                     <td class="characteristic-name">Rhythmic</td>
-                    <td>Géneros con énfasis en ritmos complejos y percusión fuerte, como R&B contemporáneo, a menudo
-                        orientados al baile (Movido).</td>
+                    <td>Canciones con énfasis en ritmos complejos y percusión fuerte.</td>
                 </tr>
                 <tr>
                     <td class="characteristic-name">Dance</td>
-                    <td>Música electrónica de baile (EDM, House, Techno). Altamente "party" y "danceable" (generalmente se asocian al Cluster
-                        Movido).</td>
+                    <td>Música electrónica de baile, altamente "party" y "danceable".</td>
                 </tr>
                 <tr>
                     <td class="characteristic-name">Classic</td>
-                    <td>Música Clásica. Caracterizada por la riqueza tonal, orquestación y valores altos en "relaxed"
-                        (mayoritariamente se asocian al Cluster Tranquilo).</td>
+                    <td>Música caracterizada por la orquestación y valores altos en "relaxed".</td>
                 </tr>
                 <tr>
                     <td class="characteristic-name">Jazz</td>
-                    <td>Estilos caracterizados por la improvisación, ritmos sincopados y armonías complejas. Tiende a
-                        ser "relaxed" y "tonal" (suelen presentarse dentro del Cluster Tranquilo).</td>
+                    <td>Estilos caracterizados por armonías complejas. Tiende a ser "relaxed" y "tonal".</td>
                 </tr>
                 <tr>
                     <td class="characteristic-name">Hip-Hop</td>
-                    <td>Música basada en el sampleo y ritmos programados, con un fuerte enfoque en el rap. Usualmente
-                        es bailable y rítmico.</td>
+                    <td>Música basada en ritmos programados con un fuerte enfoque en el rap.</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <div class="section">
-        <h2 id="anomaly-title">Detección y Porcentaje de Anomalías</h2>
+        <h2 id="anomaly-title">Información sobre canciones anómalas</h2>
         <div class="pca-components">
             <div class="pca-card pca-1" style="background: #ffe6e6; border: 1px solid #ffaaaa;">
-                <h3><span class="pca-icon">🚨</span> ¿Qué es una Canción Anómala?</h3>
-                <p>Una canción es considerada anómala cuando sus características musicales (sad, happy,
-                    danceable, etc.) se desvían significativamente del patrón general o esperado del resto del
-                    dataset. Es un caso atípico que no encaja bien en ninguno de los grupos principales.</p>
-                <p>Esto no significa que sea "mala", sino que es única o inusual en su composición, como una
-                    canción de Jazz extremadamente "party" o un tema que contenga niveles altos tanto de "happy" como de "sad".</p>
+                <h3>¿Qué es una canción anómala?</h3>
+                <p>Una canción es considerada anómala cuando sus características se desvían del patrón general o esperado del resto de los datos.</p>
+                <p>Esto significa que es única o inusual en su composición, como una
+                    canción que contenga niveles altos tanto de "happy" como de "sad".</p>
             </div>
             <div class="pca-card pca-2" style="background: #e6f9ff; border: 1px solid #aad8ff;">
-                <h3><span class="pca-icon">📈</span> Clasificación y Porcentaje</h3>
-                <p>Utilizamos el algoritmo Isolation Forest para identificar estas anomalías.
-                    Este método aísla los puntos que están lejos de la mayoría, clasificándolos con anomaly = -1.</p>
-                <p>El porcentaje de anomalía se calcula a partir del score de la distancia de aislamiento,
-                    escalado entre 0% (totalmente normal) y 100% (la más anómala de todas). Esto indica qué tan lejos
-                    está una canción del "corazón" del conjunto de datos.</p>
+                <h3>Clasificación y porcentaje</h3>
+                <p>Utilizamos el algoritmo Isolation Forest para identificar las canciones anómalas.
+                    Este método aísla los puntos que están lejos de la mayoría, clasificándolos con anomaly = -1 y también colocando su porcentaje de anomalía.</p>
+                <p>Este porcentaje se encuentra entre 0% (no anómala) y 100% (muy anómala).</p>
             </div>
         </div>
     </div>
@@ -742,20 +728,20 @@ elif page == "Introducción al proyecto":
 
     <div class="container-intro">
         <div class="section">
-            <h2>📌 Descripción general</h2>
+            <h2>Descripción general</h2>
             <p class="intro-text">
             Este proyecto forma parte del <strong>Proyecto Integrador de Ciencia de Datos</strong> y tiene como objetivo 
             construir un sistema de análisis musical que permita explorar, clasificar y recomendar canciones 
             según sus características sonoras.
             </p>
             <p class="intro-text">
-            Utilizamos la base de datos de <strong>AcousticBrainz</strong>, que ofrece información técnica sobre millones de canciones. 
+            Utilizamos la base de datos de <strong>AcousticBrainz</strong> para tomar la información de las canciones, que ofrece información técnica sobre millones de ellas. 
             Sin embargo, es importante aclarar que a pesar de tener muchísimas canciones, AcousticBrainz está limitado ya que actualmente no está en uso. Es decir, se han cargado canciones en dicha plataforma hasta el año 2022, es por ello que aquí no se encontrarán canciones actuales.
             </p>
         </div>
 
         <div class="section">
-            <h2>⚙️ Proceso de desarrollo</h2>
+            <h2>Proceso de desarrollo</h2>
             <p class="intro-text">
             El desarrollo se dividió en distintas etapas:
             </p>
@@ -770,7 +756,7 @@ elif page == "Introducción al proyecto":
         </div>
 
         <div class="section">
-            <h2>🎯 Resultados y aportes</h2>
+            <h2>Resultados y aportes</h2>
             <p class="intro-text">
             El sistema permite explorar el espacio musical de forma visual e interactiva. 
             Los usuarios pueden seleccionar una canción, analizar sus atributos musicales, su pertenencia a un cluster 
